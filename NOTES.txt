@@ -1,0 +1,28 @@
+Tasks to do:-
+  #1: Create a register route
+    -- Create an user with the given details
+      -- Name
+      -- Email
+        -- Don't allow user to pass the same email
+      -- Password
+        -- Hash the password
+      -- Timestamp
+        -- The time the user was created
+      -- Tasks
+        -- It is an object with a time stamp
+          -- All the tasks in the time stamp lives here
+    -- Create a token
+    -- Return a token and nothing else
+
+  #2: Create a login route
+    -- Check the credentials and return a token
+
+  #3: Create a logout route
+    -- Delete the token (if exists) that came with the request
+
+  #4: Create a route to create a new task
+    -- Dont let an user create a task with an expired time stamp
+
+  #5: Create a route to get all tasks of a given time stamp
+
+  #6: Create a route to delete a task
