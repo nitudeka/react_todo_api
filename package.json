@@ -4,6 +4,7 @@
   "description": "API server for my 'React Todo' app",
   "main": "index.js",
   "dependencies": {
+    "bcrypt": "^3.0.2",
     "express": "^4.16.4"
   },
   "devDependencies": {
