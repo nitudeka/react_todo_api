@@ -13,7 +13,9 @@
     "mocha": "^5.2.0"
   },
   "scripts": {
-    "test": "jest"
+    "start": "NODE_ENV=production node index.js",
+    "dev": "node index.js",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
