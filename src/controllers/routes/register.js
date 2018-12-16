@@ -1,4 +1,4 @@
-module.exports = (req, res, userSchema, bcrypt) => {
+module.exports = (req, res, userSchema, tokenSchema, bcrypt) => {
   // Validate the required fields
   const name = typeof(req.body.name) === 'string' ? req.body.name : false;
   const email = typeof(req.body.email) === 'string' ? req.body.email : false;
@@ -17,7 +17,17 @@ module.exports = (req, res, userSchema, bcrypt) => {
               const newUser = new userSchema(userData);
               newUser.save((err, user) => {
                 if (!err && user) {
-                  
+                  // Create and store a token
+                  const tokenData = new tokenSchema({ email });
+                  tokenData.save((err, token) => {
+                    if (!err && token) {
+                      res.json(token);
+                    } else {
+                      res.status(500).json('Error creating token');
+                    }
+                  })
+                } else {
+                  res.status(500).json('Could not create the user');
                 }
               })
             } else {

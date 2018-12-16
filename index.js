@@ -9,8 +9,9 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const config = require('./src/lib/config');
-// User schema
+// Schemas
 const User = require('./src/controllers/models/user');
+const Token = require('./src/controllers/models/token');
 // Routes
 const register = require('./src/controllers/routes/register')
 
@@ -20,7 +21,7 @@ app.use(bodyParser.json());
 // Connect to mongoose database
 mongoose.connect(config.dbUrl, { useNewUrlParser: true, useCreateIndex: true });
 // Required fields:- name, email, password, timestamp
-app.post('/register', (req, res) => register(req, res, User, bcrypt));
+app.post('/register', (req, res) => register(req, res, User, Token, bcrypt));
 
 app.listen(config.PORT, () => {
   console.log('Server is listening on port', config.PORT);
