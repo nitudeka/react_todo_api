@@ -23,23 +23,23 @@ module.exports = (req, res, userSchema, tokenSchema, bcrypt) => {
                     if (!err && token) {
                       res.json(token);
                     } else {
-                      res.status(500).json('Error creating token');
+                      res.status(500).json({ message: 'Error creating token' });
                     }
                   })
                 } else {
-                  res.status(500).json('Could not create the user');
+                  res.status(500).json({ message: 'Could not create the user' });
                 }
               })
             } else {
-              res.status(500).json('Could not hash the password');
+              res.status(500).json({ message: 'Could not hash the password' });
             }
           })
         })
       } else {
-        res.status(400).json('User already exists');
+        res.status(400).json({ message: 'User already exists' });
       }
     })
   } else {
-    res.status(400).json('Missing required field(s)');
+    res.status(400).json({ message: 'Missing required field(s)' });
   }
 }
