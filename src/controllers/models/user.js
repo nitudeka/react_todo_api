@@ -18,7 +18,7 @@ const userSchema = new Schema({
     required: true
   },
   joined: {
-    type: Number,
+    type: Date,
     required: true
   },
   tasks: [
