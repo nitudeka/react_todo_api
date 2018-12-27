@@ -1,4 +1,4 @@
-module.exports = (req, res, userSchema, bcrypt) => {
+module.exports = (req, res, userSchema, bcrypt, jwt, config) => {
   // Validate the required fields
   const name = typeof(req.body.name) === 'string' ? req.body.name : false;
   const email = typeof(req.body.email) === 'string' ? req.body.email : false;
@@ -16,7 +16,9 @@ module.exports = (req, res, userSchema, bcrypt) => {
               const userData = { name, email, hashedPassword, joined: timestamp, tasks: [] };
               const newUser = new userSchema(userData);
               newUser.save((err, user) => {
-                // Do something here
+                // Create a JWT token with the email and password and send it back to the user
+                const token = jwt.sign({ email: email, password: hashedPassword }, config.jwtSecret);
+                res.json(token);
               })
             } else {
               res.status(500).json({ message: 'Could not hash the password' });
