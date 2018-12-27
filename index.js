@@ -8,6 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const config = require('./src/lib/config');
 // Schemas
 const User = require('./src/controllers/models/user');
@@ -21,9 +22,9 @@ app.use(bodyParser.json());
 // Connect to mongoose database
 mongoose.connect(config.dbUrl, { useNewUrlParser: true, useCreateIndex: true });
 // Required fields:- name, email, password, timestamp
-app.post('/register', (req, res) => register(req, res, User, bcrypt));
+app.post('/register', (req, res) => register(req, res, User, bcrypt, jwt, config));
 // Required fields:- email, password
-app.post('/login', (req, res) => login(req, res, User, bcrypt));
+app.post('/login', (req, res) => login(req, res, User, bcrypt, jwt, config));
 
 app.listen(config.PORT, () => {
   console.log('Server is listening on port', config.PORT);
