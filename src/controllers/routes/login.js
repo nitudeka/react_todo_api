@@ -28,11 +28,3 @@ module.exports = (req, res, userSchema, bcrypt, tokenSchema) => {
     })
   }
 }
-
-/*
-  /login {
-    email: 'john@gmail.com',
-    password: 'john'
-  }
-  should return a token with email and _id
-*/
