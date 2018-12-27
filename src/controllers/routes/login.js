@@ -12,7 +12,7 @@ module.exports = (req, res, userSchema, bcrypt, tokenSchema) => {
            * If the password is valid create a token and send it back to the user
           */
           const tokenData = new tokenSchema({ email });
-          token.save((err, token) => {
+          tokenData.save((err, token) => {
             if (!err && token) {
               res.json(token);
             } else {
