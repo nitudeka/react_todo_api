@@ -1,4 +1,4 @@
-module.exports = (req, res, userSchema, bcrypt, tokenSchema) => {
+module.exports = (req, res, userSchema, bcrypt) => {
   // Validate the required fields
   const email = typeof(req.body.email) === 'string' && req.body.email.length > 0 ? req.body.email : false;
   const password = typeof(req.body.password) === 'string' && req.body.password.length > 0 ? req.body.password : false;
@@ -11,14 +11,7 @@ module.exports = (req, res, userSchema, bcrypt, tokenSchema) => {
           /*
            * If the password is valid create a token and send it back to the user
           */
-          const tokenData = new tokenSchema({ email });
-          tokenData.save((err, token) => {
-            if (!err && token) {
-              res.json(token);
-            } else {
-              res.status(500).json({ message: 'Could not create the token' });
-            }
-          })
+          // Do something here
         } else {
           res.status(403).json({ message: 'Wrong credentials!' });
         }
