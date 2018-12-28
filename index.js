@@ -15,6 +15,7 @@ const User = require('./src/controllers/models/user');
 // Routes
 const register = require('./src/controllers/routes/register')
 const login = require('./src/controllers/routes/login');
+const newTask = require('./src/controllers/routes/newTask');
 
 const app = express();
 app.use(bodyParser.json());
@@ -25,6 +26,8 @@ mongoose.connect(config.dbUrl, { useNewUrlParser: true, useCreateIndex: true });
 app.post('/register', (req, res) => register(req, res, User, bcrypt, jwt, config));
 // Required fields:- email, password
 app.post('/login', (req, res) => login(req, res, User, bcrypt, jwt, config));
+// Required fields:- token, new task, timestamp
+app.post('/task', (req, res) => newTask(req, res, jwt, config, bcrypt, User));
 
 app.listen(config.PORT, () => {
   console.log('Server is listening on port', config.PORT);

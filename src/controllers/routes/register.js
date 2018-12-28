@@ -17,7 +17,7 @@ module.exports = (req, res, userSchema, bcrypt, jwt, config) => {
               const newUser = new userSchema(userData);
               newUser.save((err, user) => {
                 // Create a JWT token with the email and password and send it back to the user
-                const token = jwt.sign({ email: email, password: hashedPassword }, config.jwtSecret);
+                const token = jwt.sign({ email, password }, config.jwtSecret);
                 res.json(token);
               })
             } else {

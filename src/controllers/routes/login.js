@@ -12,7 +12,7 @@ module.exports = (req, res, userSchema, bcrypt, jwt, config) => {
             * If the password is valid create a token and send it back to the user
           */
           // Send back a JWT token with the email and hashed password
-          const token = jwt.sign({ email: email, hashedPassword: data.hashedPassword }, config.jwtSecret);
+          const token = jwt.sign({ email, password }, config.jwtSecret);
           res.json(token);
         } else {
           res.status(403).json({ message: 'Wrong credentials!' });
