@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-// User schema defination
+// User schema definition
 const userSchema = new Schema({
   name: {
     type: String,
