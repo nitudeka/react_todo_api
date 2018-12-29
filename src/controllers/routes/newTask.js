@@ -4,16 +4,27 @@ module.exports = (req, res, jwt, config, bcrypt, userSchema) => {
   const task = typeof(req.body.task) === 'string' && req.body.task.length > 0 ? req.body.task : false;
   const token = typeof(req.headers.token) === 'string' ? req.headers.token : false;
   if (timestamp && task && token) {
+    // Verify and extract the data from the JWT token
     const tokenData = jwt.verify(token, config.jwtSecret);
+    // Check if the user exists, checking the email that was extracted from the token
     userSchema.findOne({ email: tokenData.email }, (err, userData) => {
+      // Continue if the token is valid
       if (!err && userData) {
         const passwordValid = bcrypt.compareSync(tokenData.password, userData.hashedPassword);
         if (passwordValid) {
-          userData.tasks[timestamp] = userData.tasks[timestamp] ? userData.tasks[timestamp] : {};
-          userData.tasks[timestamp][task] = 'In progress';
-          userSchema.findOneAndUpdate({ email: userData.email }, { tasks: { ...userData.tasks, [timestamp]: { ...userData.tasks[timestamp], [task]: 'In Progress' } } }, { new: true }, (err, data) => {
+          // Create an object with all the old task data and with the new task data
+          const updatedTasks = {
+            ...userData.tasks,
+            [timestamp]: {
+              ...userData.tasks[timestamp],
+              [task]: 'In Progress'
+            }
+          };
+          // Find the user who is adding a new task and populate their tasks with the new task's data
+          userSchema.findOneAndUpdate({ email: userData.email }, { tasks: updatedTasks }, { new: true }, (err, data) => {
             if (!err && data) {
-              res.json(data)
+              // Return the tasks object if everything is ok
+              res.json(data.tasks);
             } else {
               res.status(500)
             }
