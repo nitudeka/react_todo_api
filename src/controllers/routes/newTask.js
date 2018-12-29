@@ -9,7 +9,15 @@ module.exports = (req, res, jwt, config, bcrypt, userSchema) => {
       if (!err && userData) {
         const passwordValid = bcrypt.compareSync(tokenData.password, userData.hashedPassword);
         if (passwordValid) {
-          res.status(200).json('Success');
+          userData.tasks[timestamp] = userData.tasks[timestamp] ? userData.tasks[timestamp] : {};
+          userData.tasks[timestamp][task] = 'In progress';
+          userSchema.findOneAndUpdate({ email: userData.email }, { tasks: { ...userData.tasks, [timestamp]: { ...userData.tasks[timestamp], [task]: 'In Progress' } } }, { new: true }, (err, data) => {
+            if (!err && data) {
+              res.json(data)
+            } else {
+              res.status(500)
+            }
+          });
         } else {
           res.status(403).json({ message: 'Invalid token' });
         }
