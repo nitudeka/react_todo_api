@@ -21,13 +21,7 @@ const userSchema = new Schema({
     type: Date,
     required: true
   },
-  tasks: [
-    {
-      date: Number,
-      task: String,
-      status: String
-    }
-  ]
+  tasks: {}
 })
 
 module.exports = mongoose.model('users', userSchema);
