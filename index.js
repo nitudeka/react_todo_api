@@ -16,6 +16,7 @@ const User = require('./src/controllers/models/user');
 const register = require('./src/controllers/routes/register')
 const login = require('./src/controllers/routes/login');
 const newTask = require('./src/controllers/routes/newTask');
+const deleteTask = require('./src/controllers/routes/deleteTask');
 
 const app = express();
 app.use(bodyParser.json());
@@ -28,6 +29,8 @@ app.post('/register', (req, res) => register(req, res, User, bcrypt, jwt, config
 app.post('/login', (req, res) => login(req, res, User, bcrypt, jwt, config));
 // Required fields:- token, new task, timestamp
 app.post('/task', (req, res) => newTask(req, res, jwt, config, bcrypt, User));
+// Required fields:- token, task, timestamp
+app.delete('/task', (req, res) => deleteTask(req, res, jwt, config, User));
 
 app.listen(config.PORT, () => {
   console.log('Server is listening on port', config.PORT);
