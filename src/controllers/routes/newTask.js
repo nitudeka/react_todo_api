@@ -6,36 +6,40 @@ module.exports = (req, res, jwt, config, bcrypt, userSchema) => {
   if (timestamp && task && token) {
     // Verify and extract the data from the JWT token
     const tokenData = jwt.verify(token, config.jwtSecret);
-    // Check if the user exists, checking the email that was extracted from the token
-    userSchema.findOne({ email: tokenData.email }, (err, userData) => {
-      // Continue if the token is valid
-      if (!err && userData) {
-        const passwordValid = bcrypt.compareSync(tokenData.password, userData.hashedPassword);
-        if (passwordValid) {
-          // Create an object with all the old task data and with the new task data
-          const updatedTasks = {
-            ...userData.tasks,
-            [timestamp]: {
-              ...userData.tasks[timestamp],
-              [task]: 'In Progress'
-            }
-          };
-          // Find the user who is adding a new task and populate their tasks with the new task's data
-          userSchema.findOneAndUpdate({ email: userData.email }, { tasks: updatedTasks }, { new: true }, (err, data) => {
-            if (!err && data) {
-              // Return the tasks object if everything is ok
-              res.json(data.tasks);
-            } else {
-              res.status(500)
-            }
-          });
+    if (typeof(tokenData) === 'object' && tokenData.email) {
+      // Check if the user exists, checking the email that was extracted from the token
+      userSchema.findOne({ email: tokenData.email }, (err, userData) => {
+        // Continue if the token is valid
+        if (!err && userData) {
+          const passwordValid = bcrypt.compareSync(tokenData.password, userData.hashedPassword);
+          if (passwordValid) {
+            // Create an object with all the old task data and with the new task data
+            const updatedTasks = {
+              ...userData.tasks,
+              [timestamp]: {
+                ...userData.tasks[timestamp],
+                [task]: 'In Progress'
+              }
+            };
+            // Find the user who is adding a new task and populate their tasks with the new task's data
+            userSchema.findOneAndUpdate({ email: userData.email }, { tasks: updatedTasks }, { new: true }, (err, data) => {
+              if (!err && data) {
+                // Return the tasks object if everything is ok
+                res.json(data.tasks);
+              } else {
+                res.status(500)
+              }
+            });
+          } else {
+            res.status(403).json({ message: 'Invalid token' });
+          }
         } else {
-          res.status(403).json({ message: 'Invalid token' });
+          res.status(404).json({ message: 'Inavlid token' });
         }
-      } else {
-        res.status(404).json({ message: 'Inavlid token' });
-      }
-    })
+      })
+    } else {
+      res.status(400).json({ message: 'Invalid token' });
+    }
   } else {
     res.status(400).json({ message: 'Invalid or missing required fields' });
   };
