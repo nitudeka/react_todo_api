@@ -15,8 +15,8 @@ const User = require('./src/controllers/models/user');
 // Routes
 const register = require('./src/controllers/routes/register')
 const login = require('./src/controllers/routes/login');
-const newTask = require('./src/controllers/routes/newTask');
-const deleteTask = require('./src/controllers/routes/deleteTask');
+const newTask = require('./src/controllers/routes/task_new');
+const deleteTask = require('./src/controllers/routes/task_delete');
 
 const app = express();
 app.use(bodyParser.json());
