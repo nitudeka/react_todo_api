@@ -15,6 +15,7 @@ const User = require('./src/controllers/models/user');
 // Routes
 const register = require('./src/controllers/routes/register')
 const login = require('./src/controllers/routes/login');
+const getTask = require('./src/controllers/routes/task_get');
 const newTask = require('./src/controllers/routes/task_new');
 const deleteTask = require('./src/controllers/routes/task_delete');
 
@@ -27,6 +28,8 @@ mongoose.connect(config.dbUrl, { useNewUrlParser: true, useCreateIndex: true });
 app.post('/register', (req, res) => register(req, res, User, bcrypt, jwt, config));
 // Required fields:- email, password
 app.post('/login', (req, res) => login(req, res, User, bcrypt, jwt, config));
+// Required fields:- token, timestamp
+app.get('/task', (req, res) => getTask(req, res, jwt, config, User, bcrypt));
 // Required fields:- token, new task, timestamp
 app.post('/task', (req, res) => newTask(req, res, jwt, config, bcrypt, User));
 // Required fields:- token, task, timestamp
