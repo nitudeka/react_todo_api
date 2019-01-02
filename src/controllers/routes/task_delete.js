@@ -1,4 +1,4 @@
-module.exports = (req, res, jwt, config, userSchema) => {
+module.exports = (req, res, jwt, config, userSchema, bcrypt) => {
   // Validate the required fields
   const timestamp = typeof(req.query.timestamp) === 'string' ? req.query.timestamp : false;
   const task = typeof(req.query.task) === 'string' ? req.query.task : false;
@@ -10,15 +10,20 @@ module.exports = (req, res, jwt, config, userSchema) => {
       // Check if the token is valid
       userSchema.findOne({ email: tokenData.email }, (err, userData) => {
         if (!err && userData) {
-          if (userData.tasks[timestamp] && userData.tasks[timestamp][task]) {
-            // Delete the requested token from the user's object
-            delete userData.tasks[timestamp][task];
-            userSchema.findOneAndUpdate({ email: tokenData.email }, { tasks: userData.tasks }, { new: true }, (err, data) => {
-              // Send back the tasks as a response
-              res.json(data.tasks[timestamp]);
-            });
+          const validPassword = bcrypt.compareSynd(tokenData.password, userData.hashedPassword);
+          if (validPassword) {
+            if (userData.tasks[timestamp] && userData.tasks[timestamp][task]) {
+              // Delete the requested token from the user's object
+              delete userData.tasks[timestamp][task];
+              userSchema.findOneAndUpdate({ email: tokenData.email }, { tasks: userData.tasks }, { new: true }, (err, data) => {
+                // Send back the tasks as a response
+                res.json(data.tasks[timestamp]);
+              });
+            } else {
+              res.status(404).json({ message: 'Task does not exist' });
+            }
           } else {
-            res.status(404).json({ message: 'Task does not exist' });
+            res.status(403).json({ message: 'Invalid token' });
           }
         } else {
           res.status(404).json({ message: 'Invalid token' });
