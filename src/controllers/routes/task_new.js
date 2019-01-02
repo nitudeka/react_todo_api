@@ -27,7 +27,7 @@ module.exports = (req, res, jwt, config, bcrypt, userSchema) => {
               userSchema.findOneAndUpdate({ email: userData.email }, { tasks: updatedTasks }, { new: true }, (err, data) => {
                 if (!err && data) {
                   // Return the tasks object if everything is ok
-                  res.json(data.tasks);
+                  res.json(data.tasks[timestamp]);
                 } else {
                   res.status(500)
                 }

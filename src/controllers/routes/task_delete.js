@@ -15,7 +15,7 @@ module.exports = (req, res, jwt, config, userSchema) => {
             delete userData.tasks[timestamp][task];
             userSchema.findOneAndUpdate({ email: tokenData.email }, { tasks: userData.tasks }, { new: true }, (err, data) => {
               // Send back the tasks as a response
-              res.json(data.tasks);
+              res.json(data.tasks[timestamp]);
             });
           } else {
             res.status(404).json({ message: 'Task does not exist' });
