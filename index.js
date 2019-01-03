@@ -31,7 +31,7 @@ app.post('/register', (req, res) => register(req, res, User, bcrypt, jwt, config
 // Required fields:- email, password
 app.post('/login', (req, res) => login(req, res, User, bcrypt, jwt, config));
 // Required fields:- token, timestamp
-app.get('/task', (req, res) => getTask(req, res, jwt, config, User, bcrypt, helpers));
+app.get('/task', (req, res) => getTask(req, res, helpers));
 // Required fields:- token, new task, timestamp, currentTime
 app.post('/task', (req, res) => newTask(req, res, jwt, config, bcrypt, User));
 // Required fields:- token, task, timestamp, update

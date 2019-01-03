@@ -1,4 +1,4 @@
-module.exports = (req, res, jwt, config, userSchema, bcrypt, helpers) => {
+module.exports = (req, res, helpers) => {
   // Validate the requried filds
   const timestamp = typeof(req.query.timestamp) === 'string' ? req.query.timestamp : false;
   const token = typeof(req.headers.token) === 'string' ? req.headers.token : false;
