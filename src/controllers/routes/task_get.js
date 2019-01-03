@@ -4,9 +4,9 @@ module.exports = (req, res, helpers) => {
   const token = typeof(req.headers.token) === 'string' ? req.headers.token : false;
   if (timestamp && token) {
     // Verify if the token is valid
-    helpers.verifyToken(token, timestamp, (err, data) => {
+    helpers.verifyToken(token, (err, data) => {
       if (!err && data) {
-        res.json(data.userData);
+        res.json(data.userData[timestamp]);
       } else {
         res.status(400).json({ message: 'Invalid token' });
       };
