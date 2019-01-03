@@ -1,6 +1,6 @@
 module.exports = (req, res, jwt, config, userSchema, bcrypt) => {
   // Validate the requried filds
-  const timestamp = typeof(req.query.timestamp) ? req.query.timestamp : false;
+  const timestamp = typeof(req.query.timestamp) === 'number' ? req.query.timestamp : false;
   const token = typeof(req.headers.token) === 'string' ? req.headers.token : false;
   if (timestamp && token) {
     // Extract the data from the token
