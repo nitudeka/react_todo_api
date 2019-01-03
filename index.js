@@ -33,9 +33,9 @@ app.post('/login', (req, res) => login(req, res, User, bcrypt, jwt, config));
 // Required fields:- token, timestamp
 app.get('/task', (req, res) => getTask(req, res, helpers));
 // Required fields:- token, new task, timestamp, currentTime
-app.post('/task', (req, res) => newTask(req, res, jwt, config, bcrypt, User, helpers));
+app.post('/task', (req, res) => newTask(req, res, User, helpers));
 // Required fields:- token, task, timestamp, update
-app.put('/task', (req, res) => updateTask(req, res, jwt, config, User, bcrypt));
+app.put('/task', (req, res) => updateTask(req, res, User, helpers));
 // Required fields:- token, task, timestamp
 app.delete('/task', (req, res) => deleteTask(req, res, jwt, config, User));
 
