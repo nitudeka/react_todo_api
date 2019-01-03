@@ -37,7 +37,7 @@ app.post('/task', (req, res) => newTask(req, res, User, helpers));
 // Required fields:- token, task, timestamp, update
 app.put('/task', (req, res) => updateTask(req, res, User, helpers));
 // Required fields:- token, task, timestamp
-app.delete('/task', (req, res) => deleteTask(req, res, jwt, config, User));
+app.delete('/task', (req, res) => deleteTask(req, res, User, helpers));
 
 app.listen(config.PORT, () => {
   console.log('Server is listening on port', config.PORT);
