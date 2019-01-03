@@ -13,13 +13,14 @@ const userSchema = require('../controllers/models/user');
 const lib = {};
 
 // Check if a token is valid
-lib.verifyToken = (token, timestamp, callback) => {
+lib.verifyToken = (token, callback) => {
   // Extract the data from the token
   let tokenData = false;
   try {
     tokenData = jwt.verify(token, config.jwtSecret);
   } catch (e) {
     callback(true);
+    return;
   };
   // Return false if the token does not contain an email and a password field
   if (tokenData.email && tokenData.password) {
@@ -27,7 +28,7 @@ lib.verifyToken = (token, timestamp, callback) => {
       if (!err && data) {
         const validPassword = bcrypt.compareSync(tokenData.password, data.hashedPassword);
         if (validPassword) {
-          tokenData.userData = data.tasks[timestamp] || {};
+          tokenData.userData = data.tasks;
           callback(false, tokenData);
         } else {
           callback(true);
