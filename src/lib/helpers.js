@@ -27,7 +27,7 @@ lib.verifyToken = (token) => {
       if (!err && data) {
         const validPassword = bcrypt.compareSync(tokenData.password, data.hashedPassword);
         if (validPassword) {
-          return true;
+          return tokenData;
         } else {
           return false;
         };
