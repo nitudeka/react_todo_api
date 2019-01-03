@@ -17,6 +17,7 @@ const register = require('./src/controllers/routes/register')
 const login = require('./src/controllers/routes/login');
 const getTask = require('./src/controllers/routes/task_get');
 const newTask = require('./src/controllers/routes/task_new');
+const updateTask = require('./src/controllers/routes/task_update');
 const deleteTask = require('./src/controllers/routes/task_delete');
 
 const app = express();
@@ -30,8 +31,10 @@ app.post('/register', (req, res) => register(req, res, User, bcrypt, jwt, config
 app.post('/login', (req, res) => login(req, res, User, bcrypt, jwt, config));
 // Required fields:- token, timestamp
 app.get('/task', (req, res) => getTask(req, res, jwt, config, User, bcrypt));
-// Required fields:- token, new task, timestamp
+// Required fields:- token, new task, timestamp, currentTime
 app.post('/task', (req, res) => newTask(req, res, jwt, config, bcrypt, User));
+// Required fields:- token, task, timestamp, update
+app.put('/task', (req, res) => updateTask(req, res, jwt, config, User, bcrypt));
 // Required fields:- token, task, timestamp
 app.delete('/task', (req, res) => deleteTask(req, res, jwt, config, User));
 
