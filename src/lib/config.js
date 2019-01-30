@@ -21,7 +21,7 @@ environments.production = {
 const currentEnv = typeof(process.env.NODE_ENV) === 'string' ? process.env.NODE_ENV.toLowerCase() : '';
 
 // check if the requested environment exists (default to development if does not exist)
-const envToExport = environments[currentEnv] ? environments[currentEnv] : environments.production;
+const envToExport = environments[currentEnv] ? environments[currentEnv] : environments.development;
 
 // exporte the environment that is required
 module.exports = envToExport;
