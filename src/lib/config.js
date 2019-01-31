@@ -7,15 +7,18 @@
 const environments = {};
 
 environments.development = {
-  port: 3000
+  port: 3000,
+  mongoUrl: 'mongodb://localhost:27017/todo'
 };
 
 environments.test = {
-  port: 4000
+  port: 4000,
+  mongoUrl: 'mongodb://localhost:27017/todotest'
 };
 
 environments.production = {
-  port: process.env.PORT
+  port: process.env.PORT,
+  mongoUrl: process.env.MONGO_URL
 };
 
 const currentEnv = typeof(process.env.NODE_ENV) === 'string' ? process.env.NODE_ENV.toLowerCase() : '';
