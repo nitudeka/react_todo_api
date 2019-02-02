@@ -8,17 +8,20 @@ const environments = {};
 
 environments.development = {
   port: 3000,
-  mongoUrl: 'mongodb://localhost:27017/todo'
+  mongoUrl: 'mongodb://localhost:27017/todo',
+  jwtSecret: 'thisIsASecret'
 };
 
 environments.test = {
   port: 4000,
-  mongoUrl: 'mongodb://localhost:27017/todotest'
+  mongoUrl: 'mongodb://localhost:27017/todotest',
+  jwtSecret: 'thisIsASecret'
 };
 
 environments.production = {
   port: process.env.PORT,
-  mongoUrl: process.env.MONGO_URL
+  mongoUrl: process.env.MONGO_URL,
+  jwtSecret: process.env.JWT_SECRET
 };
 
 const currentEnv = typeof(process.env.NODE_ENV) === 'string' ? process.env.NODE_ENV.toLowerCase() : '';
