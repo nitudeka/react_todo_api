@@ -1,0 +1,61 @@
+------------------------------- Register ------------------------------------
+
+  #1: Required data to Register
+  
+      name: <name of the user>
+      email: <email of the user>
+      password: <password of the user>
+      joined: <date the user joined the app>
+
+  #2: What should get returned
+    -- a JWT token
+
+------------------------------- Register ------------------------------------
+
+-------------------------------- Signin -------------------------------------
+
+  #1: Required data to Signin
+
+    email: <email of the user>
+    password: <password of the user>
+
+  #2: What should get returned
+    -- a JWT token
+
+-------------------------------- Signin -------------------------------------
+
+--------------------------------- Task --------------------------------------
+
+  #1: POST (/task)
+    -- Required data
+      token: <a valid token that has been sent to the user in the time of register or signin>
+      task: <name of the task>
+      timestamp: <the date to show the task to the user>
+    -- Returned data
+      tasks: <an object containing the tasks with respect to the timestamp>
+
+  #2: GET (/task)
+    -- Required data
+      token: <a valid token that has been sent to the user in the time of register or signin>
+      timestamp: <the date to show the task to the user>
+    -- Returned data
+      tasks: <an object containing the tasks with respect to the timestamp>
+  
+  #3: PUT (/task)
+    -- Required data
+      token: <a valid token that has been sent to the user in the time of register or signin>
+      timestamp: <the date to show the task to the user>
+      task: <name of the task the user wants to update>
+      update: <the update the user wants to make to the selected task>
+    -- Returned data
+      tasks: <an object containing the tasks with respect to the timestamp>
+
+  #4: DELETE (/task)
+    -- Required data
+      token: <a valid token that has been sent to the user in the time of register or signin>
+      task: <name of the task the user wants to delete>
+      timestamp: <the date to show the task to the user>
+    -- Returned data
+      tasks: <an object containing the tasks with respect to the timestamp>
+
+--------------------------------- Task --------------------------------------
