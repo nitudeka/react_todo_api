@@ -24,7 +24,7 @@ before((done) => {
   const newUser = new User({
     name: 'John Doe',
     email: 'john@gmail.com',
-    password: bcrypt.hashSync('johndoe'),
+    hashedPassword: bcrypt.hashSync('johndoe'),
     joined: Date.now()
   });
   newUser.save(done);
@@ -51,7 +51,10 @@ describe('API integration tests', () => {
         res.body.should.have.property('token');
         // save the token for later use
         token = res.body.token;
-        done(err);
+        User.findOne({ email: reqData.email }, (err, data) => {
+          // fail the test if the user was not saved in the DB
+          done(!data);
+        });
       });
   });
   it('should not register an user without a required field field', (done) => {
@@ -115,16 +118,45 @@ describe('API integration tests', () => {
   it('should signin an user', (done) => {
     const reqData = {
       email: 'john@gmail.com',
-      password: 'john123'
-    }
+      password: 'johndoe'
+    };
     chai.request(server)
       .post('/signin')
-      .set({ token: 'tokenhere' })
       .send(reqData)
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('token');
+        done(err);
+      });
+  });
+  it('should not signin an user that does not exist', (done) => {
+    const reqData = {
+      email: 'johndoe@gmail.com',
+      password: 'john123'
+    };
+    chai.request(server)
+      .post('/signin')
+      .send(reqData)
+      .end((err, res) => {
+        res.should.have.status(404);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'User does not exist');
+        done(err);
+      });
+  });
+  it('should not signin an user with wrong credentials', (done) => {
+    const reqData = {
+      email: 'john@gmail.com',
+      password: 'john12345678'
+    };
+    chai.request(server)
+      .post('/signin')
+      .send(reqData)
+      .end((err, res) => {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Wrong credentials');
         done(err);
       });
   });
@@ -144,7 +176,7 @@ describe('API integration tests', () => {
       .post('/signin')
       .send({ email: 'john@gmail.com' })
       .end((err, res) => {
-        res.should.have.status(403);
+        res.should.have.status(400);
         res.body.should.be.an('object');
         res.body.should.have.property('message', 'Missing required field(s)');
         done(err);

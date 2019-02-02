@@ -6,7 +6,13 @@
 // dependencies
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt-nodejs');
+const JWT = require('jsonwebtoken');
 const config = require('./src/lib/config');
+
+// models
+const User = require('./src/controllers/models/user');
 
 // routes
 const register = require('./src/controllers/routes/register');
@@ -17,12 +23,14 @@ const putTask = require('./src/controllers/routes/tasks_put');
 const deleteTask = require('./src/controllers/routes/tasks_delete');
 
 const app = express();
+app.use(bodyParser.json());
 
 // connect to mongodb
 mongoose.connect(config.mongoUrl, { useNewUrlParser: true });
 
-app.post('/register', (req, res) => register(req, res));
-app.post('/signin', (req, res) => signin(req, res));
+// required data:- name, email(unique), password, timestamp
+app.post('/register', (req, res) => register(req, res, bcrypt, User, JWT, config));
+app.post('/signin', (req, res) => signin(req, res, User, bcrypt, JWT, config));
 app.post('/task', (req, res) => postTask(req, res));
 app.get('/task', (req, res) => getTask(req, res));
 app.put('/task', (req, res) => putTask(req, res));
