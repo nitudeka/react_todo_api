@@ -12,8 +12,13 @@ const server = require('../index');
 
 chai.use(chaiHttp);
 
-// get the token that got returned from the routes
+// get the token that got returned from the register route (don't overwrite it)
 let token;
+// set the task that should get sent to the server
+const taskData = {
+  task: 'Do some code',
+  timestamp: Date.now()
+};
 
 before((done) => {
   const newUser = new User({
@@ -44,6 +49,8 @@ describe('API integration tests', () => {
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('token');
+        // save the token for later use
+        token = res.body.token;
         done(err);
       });
   });
@@ -140,6 +147,42 @@ describe('API integration tests', () => {
         res.should.have.status(403);
         res.body.should.be.an('object');
         res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should create a new task', (done) => {
+    chai.request(server)
+      .post('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .send(taskData)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        res.body.should.have.property(taskData.timestamp);
+        done(err);
+      });
+  });
+  it('should get tasks with respect to the timestamp', (done) => {
+    chai.request(server)
+      .get('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        res.body.should.have.property(taskData.timestamp);
+        done(err);
+      });
+  });
+  it('should update a task', (done) => {
+    chai.request(server)
+      .put('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .send({ ...taskData, update: 'completed' })
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        res.body.should.have.property(taskData.timestamp);
+        res.body[taskData.timestamp].should.have.property(taskData.task, 'completed');
         done(err);
       });
   });
