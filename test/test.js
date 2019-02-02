@@ -12,11 +12,11 @@ const server = require('../index');
 
 chai.use(chaiHttp);
 
-// get the token that got returned from the register route (don't overwrite it)
-let token;
+// get the token that got returned from the register route
+let token = '';
 // set the task that should get sent to the server
 const taskData = {
-  task: 'Do some code',
+  task: 'test task',
   timestamp: Date.now()
 };
 
@@ -158,7 +158,7 @@ describe('API integration tests', () => {
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.an('object');
-        res.body.should.have.property(taskData.timestamp);
+        res.body.should.have.property(taskData.task);
         done(err);
       });
   });
@@ -169,7 +169,7 @@ describe('API integration tests', () => {
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.an('object');
-        res.body.should.have.property(taskData.timestamp);
+        res.body.should.have.property(taskData.task);
         done(err);
       });
   });
@@ -181,8 +181,19 @@ describe('API integration tests', () => {
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.an('object');
-        res.body.should.have.property(taskData.timestamp);
-        res.body[taskData.timestamp].should.have.property(taskData.task, 'completed');
+        res.body.should.have.property(taskData.task, 'completed');
+        done(err);
+      });
+  });
+  it('should delete a task', (done) => {
+    chai.request(server)
+      .del('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .query({ timestamp: taskData.timestamp, task: taskData.task })
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        res.body.should.not.have.property(taskData.task);
         done(err);
       });
   });
