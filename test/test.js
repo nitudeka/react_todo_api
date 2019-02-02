@@ -30,14 +30,15 @@ after((done) => {
 });
 
 describe('API integration tests', () => {
-  it('should signin an user', (done) => {
+  it('should register an user', (done) => {
     const reqData = {
-      email: 'john@gmail.com',
-      password: 'john123'
-    }
+      name: 'John Doe',
+      email: 'john1@gmail.com',
+      password: 'john123',
+      joined: Date.now()
+    };
     chai.request(server)
-      .post('/signin')
-      .set({ token: 'tokenhere' })
+      .post('/register')
       .send(reqData)
       .end((err, res) => {
         res.should.have.status(200);
@@ -46,15 +47,72 @@ describe('API integration tests', () => {
         done(err);
       });
   });
-  it('should register an user', (done) => {
+  it('should not register an user without a required field field', (done) => {
+    chai.request(server)
+      .post('/register')
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not register an user without an email field', (done) => {
     const reqData = {
-      name: 'John Doe 1',
-      email: 'john1@gmail.com',
+      name: 'John Doe',
       password: 'john123',
       joined: Date.now()
     };
     chai.request(server)
       .post('/register')
+      .send(reqData)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not register an user without a password field', (done) => {
+    const reqData = {
+      name: 'John Doe',
+      email: 'john@gmail.com',
+      joined: Date.now()
+    };
+    chai.request(server)
+      .post('/register')
+      .send(reqData)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not register an user without a joined field', (done) => {
+    const reqData = {
+      name: 'John Doe',
+      email: 'john@gmail.com',
+      password: 'john123',
+    };
+    chai.request(server)
+      .post('/register')
+      .send(reqData)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should signin an user', (done) => {
+    const reqData = {
+      email: 'john@gmail.com',
+      password: 'john123'
+    }
+    chai.request(server)
+      .post('/signin')
+      .set({ token: 'tokenhere' })
       .send(reqData)
       .end((err, res) => {
         res.should.have.status(200);
