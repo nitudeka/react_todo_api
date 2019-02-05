@@ -198,6 +198,7 @@ describe('API integration tests', () => {
     chai.request(server)
       .get('/task')
       .set({ token: token, 'content-type': 'application/json' })
+      .query({ timestamp: taskData.timestamp })
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.an('object');
