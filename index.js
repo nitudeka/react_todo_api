@@ -38,7 +38,7 @@ app.post('/task', (req, res) => postTask(req, res, helpers, User));
 // required data:- token, timestamp
 app.get('/task', (req, res) => getTask(req, res, helpers, User));
 // required data:- token, timestamp, task, update
-app.put('/task', (req, res) => putTask(req, res, JWT, config, User));
+app.put('/task', (req, res) => putTask(req, res, helpers, User));
 // required data:- token, timestamp, task
 app.delete('/task', (req, res) => deleteTask(req, res));
 

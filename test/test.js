@@ -301,6 +301,66 @@ describe('API integration tests', () => {
         done(err);
       });
   });
+  it('should not update a task without a token', (done) => {
+    chai.request(server)
+      .put('/task')
+      .set({ 'content-type': 'application/json' })
+      .send({ ...taskData, update: 'completed' })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not update a task with an invalid token', (done) => {
+    chai.request(server)
+      .put('/task')
+      .set({ token: 'thisIsAnInvalidToken', 'content-type': 'application/json' })
+      .send({ ...taskData, update: 'completed' })
+      .end((err, res) => {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Invalid token');
+        done(err);
+      });
+  });
+  it('should not update a task without an update field', (done) => {
+    chai.request(server)
+      .put('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .send({ taskData })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not update a task without a timestamp', (done) => {
+    chai.request(server)
+      .put('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .send({ task: taskData.task, update: 'completed' })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not update a task without a task field', (done) => {
+    chai.request(server)
+      .put('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .send({ timestamp: taskData.timestamp, update: 'completed' })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
   it('should delete a task', (done) => {
     chai.request(server)
       .del('/task')
