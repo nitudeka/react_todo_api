@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
 const JWT = require('jsonwebtoken');
 const config = require('./src/lib/config');
+const helpers = require('./src/lib/helpers');
 
 // models
 const User = require('./src/controllers/models/user');
@@ -33,7 +34,7 @@ app.post('/register', (req, res) => register(req, res, bcrypt, User, JWT, config
 // required data:- email, password
 app.post('/signin', (req, res) => signin(req, res, User, bcrypt, JWT, config));
 // required data:- token, timestamp, task
-app.post('/task', (req, res) => postTask(req, res, JWT, config, User));
+app.post('/task', (req, res) => postTask(req, res, helpers, User));
 // required data:- token, timestamp
 app.get('/task', (req, res) => getTask(req, res, JWT, config, User));
 // required data:- token, timestamp, task, update
