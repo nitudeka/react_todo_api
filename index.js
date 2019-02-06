@@ -36,7 +36,7 @@ app.post('/signin', (req, res) => signin(req, res, User, bcrypt, JWT, config));
 // required data:- token, timestamp, task
 app.post('/task', (req, res) => postTask(req, res, helpers, User));
 // required data:- token, timestamp
-app.get('/task', (req, res) => getTask(req, res, JWT, config, User));
+app.get('/task', (req, res) => getTask(req, res, helpers, User));
 // required data:- token, timestamp, task, update
 app.put('/task', (req, res) => putTask(req, res, JWT, config, User));
 // required data:- token, timestamp, task

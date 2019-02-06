@@ -254,6 +254,41 @@ describe('API integration tests', () => {
         done(err);
       });
   });
+  it('should not get the tasks without a token', (done) => {
+    chai.request(server)
+      .get('/task')
+      .set({ 'content-type': 'application/json' })
+      .query({ timestamp: taskData.timestamp })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not get the tasks with an invalid token', (done) => {
+    chai.request(server)
+      .get('/task')
+      .set({ token: 'thisIsAnInvalidToken', 'content-type': 'application/json' })
+      .query({ timestamp: taskData.timestamp })
+      .end((err, res) => {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Invalid token');
+        done(err);
+      });
+  });
+  it('should not get the tasks without a timestamp', (done) => {
+    chai.request(server)
+      .get('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
   it('should update a task', (done) => {
     chai.request(server)
       .put('/task')
