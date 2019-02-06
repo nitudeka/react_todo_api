@@ -373,4 +373,52 @@ describe('API integration tests', () => {
         done(err);
       });
   });
+  it('should not delete a task without a token', (done) => {
+    chai.request(server)
+      .del('/task')
+      .set({ 'content-type': 'application/json' })
+      .query({ timestamp: taskData.timestamp, task: taskData.task })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not delete a task with an invalid token', (done) => {
+    chai.request(server)
+      .del('/task')
+      .set({ token: 'thisIsAnInvalidToken', 'content-type': 'application/json' })
+      .query({ timestamp: taskData.timestamp, task: taskData.task })
+      .end((err, res) => {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Invalid token');
+        done(err);
+      });
+  });
+  it('should not delete a task without a task field', (done) => {
+    chai.request(server)
+      .del('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .query({ timestamp: taskData.timestamp })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not delete a task without a timestamp field', (done) => {
+    chai.request(server)
+      .del('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .query({ task: taskData.task })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
 });

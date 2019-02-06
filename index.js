@@ -40,7 +40,7 @@ app.get('/task', (req, res) => getTask(req, res, helpers, User));
 // required data:- token, timestamp, task, update
 app.put('/task', (req, res) => putTask(req, res, helpers, User));
 // required data:- token, timestamp, task
-app.delete('/task', (req, res) => deleteTask(req, res));
+app.delete('/task', (req, res) => deleteTask(req, res, helpers, User));
 
 app.listen(config.port, () => console.log(`server is listening on port ${config.port}`));
 
