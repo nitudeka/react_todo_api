@@ -194,6 +194,54 @@ describe('API integration tests', () => {
         done(err);
       });
   });
+  it('should not create a new task without a token', (done) => {
+    chai.request(server)
+      .post('/task')
+      .set({ 'content-type': 'application/json' })
+      .send(taskData)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not create a new task with an invalid token', (done) => {
+    chai.request(server)
+      .post('/task')
+      .set({ token: 'thisIsAnInvalidToken', 'content-type': 'application/json' })
+      .send(taskData)
+      .end((err, res) => {
+        res.should.have.status(403);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Invalid token');
+        done(err);
+      });
+  });
+  it('should not create a new task without a task', (done) => {
+    chai.request(server)
+      .post('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .send({ timestamp: taskData.timestamp })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
+  it('should not create a new task without a timestamp', (done) => {
+    chai.request(server)
+      .post('/task')
+      .set({ token: token, 'content-type': 'application/json' })
+      .send({ task: taskData.task })
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
   it('should get tasks with respect to the timestamp', (done) => {
     chai.request(server)
       .get('/task')
