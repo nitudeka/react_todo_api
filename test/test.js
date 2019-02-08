@@ -84,6 +84,22 @@ describe('API integration tests', () => {
         done(err);
       });
   });
+  it('should not register an user without a name field', (done) => {
+    const reqData = {
+      email: 'john@gmail.com',
+      password: 'john123',
+      joined: Date.now()
+    };
+    chai.request(server)
+      .post('/register')
+      .send(reqData)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'Missing required field(s)');
+        done(err);
+      });
+  });
   it('should not register an user without an email field', (done) => {
     const reqData = {
       name: 'John Doe',
