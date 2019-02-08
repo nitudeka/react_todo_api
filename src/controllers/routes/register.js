@@ -9,17 +9,24 @@ module.exports = (req, res, bcrypt, User, JWT, config) => {
     // hash the password
     bcrypt.hash(password, null, null, (err, hash) => {
       if (!err && hash) {
-        const userData = new User({ name, email, hashedPassword: hash, joined });
-        userData.save((err) => {
-          if (!err) {
-            /*
-            * create a JWT token and send it back to the user
-            *
-            */
-            const token = JWT.sign({ email, password: hash }, config.jwtSecret);
-            res.json({ token });
+        // check if the email already exists (if exists dont continue)
+        User.findOne({ email }, (err, data) => {
+          if (!err && !data) {
+            const userData = new User({ name, email, hashedPassword: hash, joined });
+            userData.save((err) => {
+              if (!err) {
+                /*
+                * create a JWT token and send it back to the user
+                *
+                */
+                const token = JWT.sign({ email, password: hash }, config.jwtSecret);
+                res.json({ token });
+              } else {
+                res.status(500).json({ message: 'Could not save the user' });
+              }
+            });
           } else {
-            res.status(500).json({ message: 'Could not save the user' });
+            res.status(400).json({ message: 'User already exists. Please try a different email' });
           }
         });
       } else {

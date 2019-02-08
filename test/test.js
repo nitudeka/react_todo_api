@@ -57,6 +57,23 @@ describe('API integration tests', () => {
         });
       });
   });
+  it('should not register an user with the same email', (done) => {
+    const reqData = {
+      name: 'John Doe',
+      email: 'john@gmail.com', // this email was already present in the DB
+      password: 'john123',
+      joined: Date.now()
+    }
+    chai.request(server)
+      .post('/register')
+      .send(reqData)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.an('object');
+        res.body.should.have.property('message', 'User already exists. Please try a different email');
+        done(err);
+      })
+  });
   it('should not register an user without a required field field', (done) => {
     chai.request(server)
       .post('/register')
