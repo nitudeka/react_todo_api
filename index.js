@@ -15,6 +15,9 @@ const helpers = require('./src/lib/helpers');
 // models
 const User = require('./src/controllers/models/user');
 
+// bang
+const nitu;
+
 // routes
 const register = require('./src/controllers/routes/register');
 const signin = require('./src/controllers/routes/signin');
