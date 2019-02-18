@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
 const JWT = require('jsonwebtoken');
+const cors = require('cors');
 const config = require('./src/lib/config');
 const helpers = require('./src/lib/helpers');
 
@@ -25,6 +26,7 @@ const deleteTask = require('./src/controllers/routes/tasks_delete');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 // connect to mongodb
 mongoose.connect(config.mongoUrl, { useNewUrlParser: true });
