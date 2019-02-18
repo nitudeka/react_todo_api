@@ -20,7 +20,7 @@ module.exports = (req, res, bcrypt, User, JWT, config) => {
                 *
                 */
                 const token = JWT.sign({ email, password: hash }, config.jwtSecret);
-                res.json({ token });
+                res.json({ token, message: 'Registered successfully!' });
               } else {
                 res.status(500).json({ message: 'Could not save the user' });
               }

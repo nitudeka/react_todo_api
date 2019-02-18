@@ -49,6 +49,7 @@ describe('API integration tests', () => {
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('token');
+        res.body.should.have.property('message', 'Registered successfully!');
         // save the token for later use
         token = res.body.token;
         User.findOne({ email: reqData.email }, (err, data) => {
@@ -160,6 +161,7 @@ describe('API integration tests', () => {
         res.should.have.status(200);
         res.body.should.be.an('object');
         res.body.should.have.property('token');
+        res.body.should.have.property('message', 'Signed in successfully!');
         done(err);
       });
   });

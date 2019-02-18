@@ -8,7 +8,7 @@ module.exports = (req, res, User, bcrypt, JWT, config) => {
   			bcrypt.compare(password, data.hashedPassword, (error, bcryptRes) => {
   				if (!error && bcryptRes) {
   					const token = JWT.sign({ email, password: data.hashedPassword }, config.jwtSecret);
-		  			res.json({ token });
+		  			res.json({ token, message: 'Signed in successfully!' });
   				} else {
   					res.status(403).json({ message: 'Wrong credentials' });
   				}
